@@ -18,14 +18,34 @@ def _render_template(filename, values):
     return template.render(os.path.join(os.path.dirname(__file__), 'view', filename), values)
 
 class LandingPage(webapp.RequestHandler):
-    def get(self):
-        template_values = {}
+    def get(self):        
+        template_values = {'errors' : [], 'fields' : {} }
         self.response.out.write(_render_template('landing.html', template_values))
     def post(self):
+        errors = []
+        fields = {
+            'username' : self.request.get('username').strip(),                    
+            'newusername' : self.request.get('newusername').strip(),
+            'newemail' : self.request.get('newemail').strip()
+        }
         if self.request.get('username').strip() != '':
-            self.redirect('/home')
-        else:
-            errors = []
+            if self.request.get('password').strip() == '':
+                errors.append('blank_password')
+            if len(errors) == 0:
+                query = User.all()
+                query.filter('name =', self.request.get('username').strip())                
+                if query.count() > 0:
+                    obj = query.get()
+                    if obj.password != self.request.get('password').strip():
+                        errors.append('wrong_password')                
+                else:
+                    errors.append('unknown_username')
+            if len(errors) == 0:            
+                self.redirect('/home')
+            else:
+                template_values = {'errors' : errors, 'fields' : fields}
+                self.response.out.write(_render_template('landing.html', template_values))
+        else:            
             if self.request.get('newusername').strip() == '':
                 errors.append('blank_newusername')
             if self.request.get('newemail').strip() == '':
@@ -54,10 +74,15 @@ class LandingPage(webapp.RequestHandler):
                     status = 'new'
                 )
                 obj.put()
-                self.redirect('/home')
+                self.redirect('/signup')
             else:
-                template_values = {'errors' : errors}
+                template_values = {'errors' : errors, 'fields' : fields}
                 self.response.out.write(_render_template('landing.html', template_values))
+
+class SignUpPage(webapp.RequestHandler):
+    def get(self):
+        template_values = {}
+        self.response.out.write(_render_template('signup.html', template_values))
 
 class HomePage(webapp.RequestHandler):
     def get(self):
@@ -72,7 +97,8 @@ class PwdRecoverPage(webapp.RequestHandler):
 def main():
     application = webapp.WSGIApplication([('/', LandingPage),
                                             ('/landing.*', LandingPage),
-                                            ('/home.*', HomePage),
+                                            ('/signup.*', SignUpPage),
+                                            ('/home.*', HomePage),                                            
                                             ('/pwdrecover.*', PwdRecoverPage),
                                         ],
                                          debug=True)

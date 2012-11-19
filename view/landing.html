@@ -82,7 +82,8 @@
 
             <div class="span8">
 
-                >{{ errors }}<
+                >{{ errors }}< <br>
+                >{{ fields }}<
 
             </div>
 
@@ -90,7 +91,7 @@
 
                 <form class="form-signin" method="post" action="/landing">
                     <b>Already a user?</b>
-                    <input type="text" name="username" id="username" placeholder="Username or e-mail">
+                    <input type="text" name="username" placeholder="Username or e-mail">
                     <br>
                     <input type="password" name="password" placeholder="Password">
                     <br>
@@ -101,8 +102,8 @@
 
                     <b>Want to join?</b>
                     <br>
-                    <input type="text" name="newusername" placeholder="Username">
-                    <br>
+	                <input type="text" name="newusername" placeholder="Username">
+	                <br>
                     <input type="text" name="newemail" placeholder="E-mail">
                     <br>
                     <input type="password" name="newpassword" placeholder="Password">
