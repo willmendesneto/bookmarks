@@ -59,7 +59,7 @@ class LandingPage(webapp.RequestHandler):
                     errors.append('different_passwords')
             if len(errors) == 0:
                 query = User.all()
-                query.filter('name =', self.request.get('newusername').strip())
+                query.filter('name =', self.request.get('newusername').strip())                
                 if query.count() > 0:
                     errors.append('username_taken')
             if len(errors) == 0:
