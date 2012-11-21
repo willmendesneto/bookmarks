@@ -17,5 +17,5 @@ class User(db.Model):
     email = db.StringProperty(required = True)
     password = db.StringProperty(required = True)
     status = db.StringProperty(required = True, choices = set(['new', 'active', 'suspended']))
-    #created = db.DateTimeProperty(auto_now_add = True)
-    created = db.DateTimeProperty(default = datetime.fromtimestamp())
+    created = db.DateTimeProperty(auto_now_add = True)
+    #created = db.DateTimeProperty(default = datetime.fromtimestamp())

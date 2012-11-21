@@ -5,26 +5,21 @@ from google.appengine.ext import webapp
 #from google.appengine.ext import db
 from google.appengine.ext.webapp import template
 from google.appengine.ext.webapp import util
-#from string import strip
+import gmemsess
 
-#from model.Categoria import Categoria
-#from model.Coisa import Coisa
 from model import *
-
-#def _template_path(filename):
-#    return os.path.join(os.path.dirname(__file__), 'view', filename)
 
 def _render_template(filename, values):
     return template.render(os.path.join(os.path.dirname(__file__), 'view', filename), values)
 
 class LandingPage(webapp.RequestHandler):
-    def get(self):        
+    def get(self):
         template_values = {'errors' : [], 'fields' : {} }
         self.response.out.write(_render_template('landing.html', template_values))
     def post(self):
         errors = []
         fields = {
-            'username' : self.request.get('username').strip(),                    
+            'username' : self.request.get('username').strip(),
             'newusername' : self.request.get('newusername').strip(),
             'newemail' : self.request.get('newemail').strip()
         }
@@ -33,19 +28,22 @@ class LandingPage(webapp.RequestHandler):
                 errors.append('blank_password')
             if len(errors) == 0:
                 query = User.all()
-                query.filter('name =', self.request.get('username').strip())                
+                query.filter('name =', self.request.get('username').strip())
                 if query.count() > 0:
                     obj = query.get()
                     if obj.password != self.request.get('password').strip():
-                        errors.append('wrong_password')                
+                        errors.append('wrong_password')
                 else:
                     errors.append('unknown_username')
-            if len(errors) == 0:            
+            if len(errors) == 0:
+                sess = gmemsess.Session(self)
+                sess['username'] = self.request.get('username').strip()
+                sess.save()
                 self.redirect('/home')
             else:
                 template_values = {'errors' : errors, 'fields' : fields}
                 self.response.out.write(_render_template('landing.html', template_values))
-        else:            
+        else:
             if self.request.get('newusername').strip() == '':
                 errors.append('blank_newusername')
             if self.request.get('newemail').strip() == '':
@@ -59,7 +57,7 @@ class LandingPage(webapp.RequestHandler):
                     errors.append('different_passwords')
             if len(errors) == 0:
                 query = User.all()
-                query.filter('name =', self.request.get('newusername').strip())                
+                query.filter('name =', self.request.get('newusername').strip())
                 if query.count() > 0:
                     errors.append('username_taken')
             if len(errors) == 0:
@@ -86,8 +84,13 @@ class SignUpPage(webapp.RequestHandler):
 
 class HomePage(webapp.RequestHandler):
     def get(self):
-        template_values = {}
-        self.response.out.write(_render_template('home.html', template_values))
+        sess = gmemsess.Session(self)
+        if sess.is_new():
+            template_values = {'errors' : ['invalid_session'], 'fields' : {} }
+            self.response.out.write(_render_template('landing.html', template_values))
+        else:
+            template_values = {'username' : sess['username']}
+            self.response.out.write(_render_template('home.html', template_values))
 
 class PwdRecoverPage(webapp.RequestHandler):
     def get(self):
@@ -98,7 +101,7 @@ def main():
     application = webapp.WSGIApplication([('/', LandingPage),
                                             ('/landing.*', LandingPage),
                                             ('/signup.*', SignUpPage),
-                                            ('/home.*', HomePage),                                            
+                                            ('/home.*', HomePage),
                                             ('/pwdrecover.*', PwdRecoverPage),
                                         ],
                                          debug=True)
