@@ -13,9 +13,11 @@ def _render_template(filename, values):
     return template.render(os.path.join(os.path.dirname(__file__), 'view', filename), values)
 
 class LandingPage(webapp.RequestHandler):
+
     def get(self):
         template_values = {'errors' : [], 'fields' : {} }
         self.response.out.write(_render_template('landing.html', template_values))
+
     def post(self):
         errors = []
         fields = {
@@ -31,8 +33,11 @@ class LandingPage(webapp.RequestHandler):
                 query.filter('name =', self.request.get('username').strip())
                 if query.count() > 0:
                     obj = query.get()
-                    if obj.password != self.request.get('password').strip():
-                        errors.append('wrong_password')
+                    if obj.status != 'active':
+                        errors.append('non_active_user')
+                    else:    
+                        if obj.password != self.request.get('password').strip():
+                            errors.append('wrong_password')
                 else:
                     errors.append('unknown_username')
             if len(errors) == 0:
@@ -72,27 +77,54 @@ class LandingPage(webapp.RequestHandler):
                     status = 'new'
                 )
                 obj.put()
-                self.redirect('/signup')
+                self.redirect('/signupconf')
             else:
                 template_values = {'errors' : errors, 'fields' : fields}
                 self.response.out.write(_render_template('landing.html', template_values))
 
-class SignUpPage(webapp.RequestHandler):
+class SignUpConfPage(webapp.RequestHandler):
+
     def get(self):
         template_values = {}
-        self.response.out.write(_render_template('signup.html', template_values))
+        self.response.out.write(_render_template('signupconf.html', template_values))
 
 class HomePage(webapp.RequestHandler):
+
     def get(self):
         sess = gmemsess.Session(self)
         if sess.is_new():
             template_values = {'errors' : ['invalid_session'], 'fields' : {} }
             self.response.out.write(_render_template('landing.html', template_values))
         else:
-            template_values = {'username' : sess['username']}
+            bookmarks = []
+            tags = []
+            template_values = {'username' : sess['username'], 'bookmarks' : bookmarks, 'tags' : tags}
             self.response.out.write(_render_template('home.html', template_values))
 
+    def post(self):
+        sess = gmemsess.Session(self)
+        if sess.is_new():
+            template_values = {'errors' : ['invalid_session'], 'fields' : {} }
+            self.response.out.write(_render_template('landing.html', template_values))
+        else:        
+            errors = []
+            fields = {
+                'bmark_title' : self.request.get('bmark_title').strip(),
+                'bmark_link' : self.request.get('bmark_link').strip(),
+                'bmark_tags' : self.request.get('bmark_tags').strip()
+            }
+            template_values = {'errors' : errors, 'fields' : fields}
+            self.response.out.write(_render_template('home.html', template_values))
+        
+class LogOutCmd(webapp.RequestHandler):
+
+    def get(self):
+        sess = gmemsess.Session(self)
+        sess.invalidate()
+        self.redirect('/landing')
+
 class PwdRecoverPage(webapp.RequestHandler):
+
     def get(self):
         template_values = {}
         self.response.out.write(_render_template('pwdrecover.html', template_values))
@@ -100,8 +132,9 @@ class PwdRecoverPage(webapp.RequestHandler):
 def main():
     application = webapp.WSGIApplication([('/', LandingPage),
                                             ('/landing.*', LandingPage),
-                                            ('/signup.*', SignUpPage),
+                                            ('/signupconf.*', SignUpConfPage),
                                             ('/home.*', HomePage),
+                                            ('/logout.*', LogOutCmd),                                            
                                             ('/pwdrecover.*', PwdRecoverPage),
                                         ],
                                          debug=True)

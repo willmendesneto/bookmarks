@@ -5,11 +5,44 @@
     </head>
 
     <body>
-        <h1>Bookmarks</h1>
+        <h1>Bookmarks (Home)</h1>
         <!-- ---------- -->
         <hr width="100%" size="1">
 
-        <h2>Home do Usu&aacute;rio {{ username }}</h2>
+        <b>User: {{ username }}</b> |
+        <a href="#">My Bookmarks</a> |
+        <a href="#">Popular Bookmarks</a> |
+        <a href="/logout">Log Out</a>
+
+        <br><br>
+
+		errors: >{{ errors }}< <br>
+        fields: >{{ fields }}<
+
+        <br><br>
+
+        <b>New Bookmark</b>
+
+        <form method="post" action="/home">
+        	<input type="text" name="bmark_title" placeholder="Title"><br>
+        	<input type="text" name="bmark_link" placeholder="Link"><br>
+        	<input type="text" name="bmark_tags" placeholder="Tags"><br>
+        	<input type="submit" value="Submit">
+        </form>
+
+        <br><br>
+
+        <b>My Bookmarks</b>
+        <br><br>
+		>{{ bookmarks }}<
+
+        <br><br><br>
+
+        <b>My Tags</b>
+        <br><br>
+		>{{ tags }}<
+
+
     </body>
 
 </html>
