@@ -30,7 +30,7 @@ def _getBookmarksByUsername(username):
 
 def _getBookmarksByUserRef(userkey):
     bmks = []
-    
+
 
 class LandingPage(webapp.RequestHandler):
 
@@ -53,7 +53,7 @@ class LandingPage(webapp.RequestHandler):
                 if usr:
                     if usr.status != 'active':
                         errors.append('non_active_user')
-                    else:    
+                    else:
                         if usr.password != self.request.get('password').strip():
                             errors.append('wrong_password')
                 else:
@@ -115,7 +115,7 @@ class HomePage(webapp.RequestHandler):
         if sess.is_new():
             template_values = {'errors' : ['invalid_session'], 'fields' : {} }
             self.response.out.write(_renderTemplate('landing.html', template_values))
-        else:            
+        else:
             #usr = _getUserByName(sess['username'])
             bookmarks = [ b for b in Bookmark.all().filter('user =', sess['userkey']).run() ] # _getBookmarksByUserRef(sess['userkey']) #[]
             tags = [sess['userkey']] # _getTagsByUserRef(sess['userkey'])
@@ -127,7 +127,7 @@ class HomePage(webapp.RequestHandler):
         if sess.is_new():
             template_values = {'errors' : ['invalid_session'], 'fields' : {} }
             self.response.out.write(_renderTemplate('landing.html', template_values))
-        else:        
+        else:
             errors = []
             fields = {
                 'bmarktitle' : self.request.get('bmarktitle').strip(),
@@ -139,11 +139,11 @@ class HomePage(webapp.RequestHandler):
             if self.request.get('bmarklink').strip() == '':
                 errors.append('blank_bmarklink')
             if len(errors) == 0:
-                usr = _getUserByName(sess['username'])                
+                usr = _getUserByName(sess['username'])
                 if usr:
                     bmk = Bookmark(title = self.request.get('bmarktitle').strip(),
                         link = self.request.get('bmarklink').strip(),
-                        user = usr                    
+                        user = usr
                     )
                     bmk.put()
                 else:
@@ -153,7 +153,7 @@ class HomePage(webapp.RequestHandler):
                     nams = self.request.get('bmarktags').strip().split(',')
                     for nam in nams:
                         objtag = Tag(name = nam,
-                            user = usr                    
+                            user = usr
                         )
                         objtag.put()
                         bmktag = BookmarkTag(
@@ -163,7 +163,7 @@ class HomePage(webapp.RequestHandler):
                         bmktag.put()
             template_values = {'errors' : errors, 'fields' : fields}
             self.response.out.write(_renderTemplate('home.html', template_values))
-        
+
 class LogOutCmd(webapp.RequestHandler):
 
     def get(self):
@@ -177,12 +177,33 @@ class PwdRecoverPage(webapp.RequestHandler):
         template_values = {}
         self.response.out.write(_renderTemplate('pwdrecover.html', template_values))
 
+
+class IndexPage(webapp.RequestHandler):
+
+    def get(self):
+        template_values = {}
+        self.response.out.write(_renderTemplate('index.html', template_values))
+
+class LinksPage(webapp.RequestHandler):
+
+    def get(self):
+        template_values = {}
+        self.response.out.write(_renderTemplate('links.html', template_values))
+
+class AboutPage(webapp.RequestHandler):
+
+    def get(self):
+        template_values = {}
+        self.response.out.write(_renderTemplate('about.html', template_values))
+
 def main():
-    application = webapp.WSGIApplication([('/', LandingPage),
+    application = webapp.WSGIApplication([('/', IndexPage),
+                                            ('/links.*', LinksPage),
+                                            ('/about.*', AboutPage),
                                             ('/landing.*', LandingPage),
                                             ('/signupconf.*', SignUpConfPage),
                                             ('/home.*', HomePage),
-                                            ('/logout.*', LogOutCmd),                                            
+                                            ('/logout.*', LogOutCmd),
                                             ('/pwdrecover.*', PwdRecoverPage),
                                         ],
                                          debug=True)

@@ -1,48 +1,36 @@
-<html>
+{% extends 'base.html' %}
+{% block content %}
 
-    <head>
-        <title>Bookmarks</title>
-    </head>
+<b>User: {{ username }}</b> |
+<a href="#">My Bookmarks</a> |
+<a href="#">Popular Bookmarks</a> |
+<a href="/logout">Log Out</a>
 
-    <body>
-        <h1>Bookmarks (Home)</h1>
-        <!-- ---------- -->
-        <hr width="100%" size="1">
+<br><br>
 
-        <b>User: {{ username }}</b> |
-        <a href="#">My Bookmarks</a> |
-        <a href="#">Popular Bookmarks</a> |
-        <a href="/logout">Log Out</a>
+errors: >{{ errors }}< <br>
+fields: >{{ fields }}<
 
-        <br><br>
+<br><br>
 
-		errors: >{{ errors }}< <br>
-        fields: >{{ fields }}<
+<b>New Bookmark</b>
 
-        <br><br>
+<form method="post" action="/home">
+   <input type="text" name="bmarktitle" placeholder="Title"><br>
+   <input type="text" name="bmarklink" placeholder="Link"><br>
+   <input type="text" name="bmarktags" placeholder="Tags"><br>
+   <input type="submit" value="Submit">
+</form>
 
-        <b>New Bookmark</b>
+<br><br>
 
-        <form method="post" action="/home">
-        	<input type="text" name="bmarktitle" placeholder="Title"><br>
-        	<input type="text" name="bmarklink" placeholder="Link"><br>
-        	<input type="text" name="bmarktags" placeholder="Tags"><br>
-        	<input type="submit" value="Submit">
-        </form>
+<b>My Bookmarks</b>
+<br><br>
+>{{ bookmarks }}<
 
-        <br><br>
+<br><br><br>
 
-        <b>My Bookmarks</b>
-        <br><br>
-		>{{ bookmarks }}<
-
-        <br><br><br>
-
-        <b>My Tags</b>
-        <br><br>
-		>{{ tags }}<
-
-
-    </body>
-
-</html>
+<b>My Tags</b>
+<br><br>
+>{{ tags }}<
+{% endblock content %}

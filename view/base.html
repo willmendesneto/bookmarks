@@ -1,22 +1,159 @@
-<html>
+<!DOCTYPE HTML>
+<html lang="pt_BR">
+<head>
+	<meta charset="UTF-8">
+	<title>Reading my life</title>
+	<!-- css -->
+	<link rel="stylesheet" type="text.css" href="/static/css/bootstrap.css" />
+	<link rel="stylesheet" type="text.css" href="/static/css/bootstrap-responsive.css" />
+	<link rel="stylesheet" type="text.css" href="/static/css/styles.css" />
+	<!-- Javascript -->
+	<script src="/static/js/jquery-1.8.2.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="/static/js/bootstrap.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body>
+	<div class="navbar navbar-fixed-top">
+		<div class="navbar-inner">
+			<div class="container-fluid">
+				<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</a>
+				<a class="brand" href="javascript:void(0);" name="top">Reading my life</a>
+				<div class="nav-collapse collapse">
+					<ul class="nav">
+						<li><a href="/" rel="nofollow"><i class="icon-home"></i> Página inicial</a></li>
+						<li class="divider-vertical"></li>
+						<li><a href="/links/" rel="nofollow"><i class="icon-file"></i>Meus links</a></li>
+						<li class="divider-vertical"></li>
+						<li><a href="/landing/" rel="nofollow"><i class="icon-envelope"></i>Landing</a></li>
+						<li class="divider-vertical"></li>
+						<li><a href="/about/" rel="nofollow"><i class="icon-signal"></i>Sobre</a></li>
+						<li class="divider-vertical"></li>
+						<li><a href="javascript:void(0);" rel="nofollow"><i class="icon-lock"></i> Configurações</a></li>
+						<li class="divider-vertical"></li>
+					</ul>
+					<ul class="nav pull-right">
+						<li class="dropdown">
+							<a class="dropdown-toggle" href="javascript:void(0);" data-toggle="dropdown">Calendário<strong class="caret"></strong></a>
+							<div class="dropdown-menu">
+								<table class="table-condensed table-bordered table-striped">
+									<thead>
+										<tr>
+											<th colspan="7" class="btn-group" >
+												<a class="btn" href="javascript:void(0);"><i class="icon-chevron-left"></i></a>
+												<a class="btn">Fevereiro 2012</a>
+												<a class="btn" href="javascript:void(0);"><i class="icon-chevron-right"></i></a>
+											</th>
+										</tr>
+										<tr>
+											<th>Dom</th>
+											<th>Seg</th>
+											<th>Ter</th>
+											<th>Qua</th>
+											<th>Qui</th>
+											<th>Sex</th>
+											<th>Sáb</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td class="muted">29</td>
+											<td class="muted">30</td>
+											<td class="muted">31</td>
+											<td>1</td>
+											<td>2</td>
+											<td>3</td>
+											<td>4</td>
+										</tr>
+										<tr>
+											<td>5</td>
+											<td>6</td>
+											<td>7</td>
+											<td>8</td>
+											<td>9</td>
+											<td>10</td>
+											<td>11</td>
+										</tr>
+										<tr>
+											<td>12</td>
+											<td>13</td>
+											<td>14</td>
+											<td>15</td>
+											<td>16</td>
+											<td>17</td>
+											<td>18</td>
+										</tr>
+										<tr>
+											<td>19</td>
+											<td><strong>20</strong></td>
+											<td>21</td>
+											<td>22</td>
+											<td>23</td>
+											<td>24</td>
+											<td>25</td>
+										</tr>
+										<tr>
+											<td>26</td>
+											<td>27</td>
+											<td>28</td>
+											<td>29</td>
+											<td class="muted">1</td>
+											<td class="muted">2</td>
+											<td class="muted">3</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</li>
 
-	<head>
-		<title>Aplica&ccedil;&atilde;o de Teste</title>
-		<link type="text/css" rel="stylesheet" href="/static/estilo.css" />
-		<script language="JavaScript" type="text/javascript" src="/static/validacao.js"></script>
-	</head>
+						<li><a href="javascript:void(0);" rel="nofollow">Sign Up</a></li>
+						<li class="divider-vertical"></li>
+						<li class="dropdown">
+							<a class="dropdown-toggle" href="javascript:void(0);" data-toggle="dropdown">Sign In <strong class="caret"></strong></a>
+							<div class="dropdown-menu" style="padding: 15px; padding-bottom: 0px;">
+								<form method="post" action="login" accept-charset="UTF-8">
+									<input style="margin-bottom: 15px;" type="text" placeholder="Username" id="username" name="username">
+									<input style="margin-bottom: 15px;" type="password" placeholder="Password" id="password" name="password">
+									<input style="float: left; margin-right: 10px;" type="checkbox" name="remember-me" id="remember-me" value="1">
+									<label class="string optional" for="user_remember_me"> Lembrar usuário/senha</label>
+									<input class="btn btn-primary btn-block" type="submit" id="sign-in" value="Sign In">
+									<label style="text-align:center;margin-top:5px">OU</label>
+									<input class="btn btn-primary btn-block" type="button" id="sign-in-google" value="Sign In with Google">
+									<input class="btn btn-primary btn-block" type="button" id="sign-in-twitter" value="Sign In with Twitter">
+								</form>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+	<a class="btn btn-primary" data-toggle="modal" href="#myModal" >Login</a>
 
-	<body>
-		<h1>Aplica&ccedil;&atilde;o de Teste</h1>
-		<!-- MENU PRINCIPAL -->
-		<a href="/inicio">In&iacute;cio</a> |
-		<a href="/categoria/listar">Categorias</a> |
-		<a href="/coisa/listar">Coisas</a>
-		<!-- ---------- -->
-		<hr width="100%" size="1">
-
+	<div id="content">
 		{% block content %}{% endblock %}
+	</div>
 
-	</body>
-
+	<div class="modal hide" id="myModal">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal">x</button>
+			<h3>Login to Reading my life</h3>
+		</div>
+		<div class="modal-body">
+			<form method="post" action='' name="login_form">
+				<p><input type="text" class="span3" name="eid" id="email" placeholder="Email"></p>
+				<p><input type="password" class="span3" name="passwd" placeholder="Password"></p>
+				<p><button type="submit" class="btn btn-primary">Sign in</button>
+					<a href="javascript:void(0);">Esqueci minha senha?</a>
+				</p>
+			</form>
+		</div>
+		<div class="modal-footer">
+			New To MyWebsite.com?
+			<a href="javascript:void(0);" class="btn btn-primary">Registrar</a>
+		</div>
+	</div>
+</body>
 </html>
